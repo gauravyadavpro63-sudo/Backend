@@ -1,13 +1,13 @@
 
 
 
-console.log("i am second")
+// console.log("i am second")
 
-function sum(a,b){
+// function sum(a,b){
 
-    console.log(a+b)
-}
-function sub(a,b){
-    console.log(a-b)
-}
-module.exports={sum,sub}
+//     console.log(a+b)
+// }
+// function sub(a,b){
+//     console.log(a-b)
+// }
+// module.exports={sum,sub}

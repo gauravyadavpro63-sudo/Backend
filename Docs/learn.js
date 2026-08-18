@@ -125,3 +125,109 @@
 
 
 
+// Yep, kaneki 😎 You're studying the Node.js module system, and your notes are basically correct. Let me clean up the concepts so you understand why each thing works.
+
+// In Node.js, there are two major module systems:
+
+// 1. CommonJS — older style
+
+// const { sum, sub } = require("./second.js");
+
+
+// sum(4, 4);
+// sub(4, 4);
+
+// And in second.js:
+
+// function sum(a, b) {
+//   return a + b;
+// }
+
+
+// function sub(a, b) {
+//   return a - b;
+// }
+
+
+// module.exports = { sum, sub };
+
+// Here:
+
+// require("./second.js")
+
+// means:
+
+// "Load the code exported by second.js into this file."
+
+// Node.js wraps each CommonJS module in a function internally. That's why you may hear about the IIFE-like wrapper. More precisely, 
+// Node wraps it in a module function so variables inside one file don't automatically become global.
+
+// 2. ES Modules — modern import/export
+
+// second.mjs:
+
+// export function sum(a, b) {
+//   return a + b;
+// }
+
+
+// export function sub(a, b) {
+//   return a - b;
+// }
+
+// first.mjs:
+
+// import { sum, sub } from "./second.mjs";
+
+
+// console.log(sum(4, 4));
+// console.log(sub(4, 4));
+
+// The .mjs extension tells Node:
+
+// "Treat this file as an ES Module."
+
+// But there's an easier way 👀
+
+// You don't need .mjs.
+
+// You can use normal .js files and tell Node that your project uses ES Modules.
+
+// Create:
+
+// {
+//   "type": "module"
+// }
+
+// inside package.json.
+
+// Then:
+
+// project/
+// ├── package.json
+// ├── first.js
+// └── second.js
+
+// second.js:
+
+// export function sum(a, b) {
+//   return a + b;
+// }
+
+// first.js:
+
+// import { sum } from "./second.js";
+
+
+// console.log(sum(3, 8));
+
+// Now you're using the modern ES Module system.
+
+
+
+
+
+                      //Lecture 2
+
+
+
