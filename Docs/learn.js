@@ -472,3 +472,832 @@
 // JavaScript is single-threaded, but Node.js itself can use multiple threads internally for certain operations. That's why saying “Node.js can never use multiple threads” would be incorrect.
 
 
+    // libeuv
+
+
+//     Yep, Kaneki 😄 — libuv is a very important piece underneath Node.js.
+//  Once you understand it, Node's “asynchronous” behavior makes WAY more sense.
+
+// libuv is a C library that Node.js uses to handle asynchronous I/O and the event loop.
+
+// In simple words:
+
+// libuv helps Node.js do things without blocking the main JavaScript thread.
+
+
+// Why didn't Node wait for readFile() to finish?
+
+// Because Node.js hands the I/O work to its underlying system mechanisms, with libuv playing a major role in coordinating asynchronous operations, and JavaScript can continue executing.
+
+// Think of the architecture roughly like:
+
+//         Your JavaScript
+//               ↓
+//            Node.js
+//               ↓
+//             libuv
+//               ↓
+//      Operating System
+//               ↓
+//        File / Network / etc.
+// What does libuv actually handle?
+
+// Some major things are:
+
+// 🔄 Event loop
+// 📁 File-system operations
+// 🌐 Network I/O
+// ⏱️ Timers
+// 🧵 Thread pool for certain operations
+// ⚙️ Other OS-level asynchronous operations
+
+
+
+// if js is running in browser then all these things is handles by browser itself
+
+
+// ECMA script
+
+
+// CMAScript (ES) is the standard/specification that defines how JavaScript should work.
+
+// Think of it like a rulebook.
+
+// ECMAScript
+//    ↓
+// Defines the language rules
+//    ↓
+// JavaScript engines implement those rules
+//    ↓
+// Chrome / Firefox / Node.js / etc.
+// So what's the difference between JavaScript and ECMAScript?
+
+// A simple way to remember it:
+
+// ECMAScript is the specification; JavaScript is an implementation/language based on that specification.
+
+// For example, ECMAScript specifies things like:
+
+// let
+// const
+// var
+
+
+// function
+// class
+
+
+// Promise
+// Map
+// Set
+
+
+// async / await
+
+
+// modules
+
+// It describes how these features should behave.
+
+// Then JavaScript engines implement those rules.
+
+// For example:
+
+// Environment	JavaScript engine
+// Chrome	V8
+// Edge	V8
+// Firefox	SpiderMonkey
+// Safari	JavaScriptCore
+// Node.js	V8
+
+
+// Yep 😄 you're looking at Node.js's fs.readFile().
+
+// fs.readFile("/data.json", "utf-8", (err, resp) => {
+    
+// });
+
+// Let's break it down:
+
+// fs = File System module in Node.js.
+
+// fs.readFile(...)
+
+// means:
+
+// "Node.js, please read this file from the computer."
+
+// The arguments are:
+
+// fs.readFile(
+//     "/data.json",      // 1. file path
+//     "utf-8",           // 2. encoding
+//     (err, resp) => {}  // 3. callback
+// );
+
+// The callback receives two things:
+
+// (err, resp)
+
+// err → contains an error if something went wrong.
+
+// resp → contains the file's contents if reading succeeded.
+
+// For example:
+
+// const fs = require("fs");
+
+
+// fs.readFile("data.json", "utf-8", (err, resp) => {
+//     if (err) {
+//         console.log(err);
+//         return;
+//     }
+
+
+//     console.log(resp);
+// });
+
+// If data.json contains:
+
+// {
+//   "name": "Kaneki"
+// }
+
+// then:
+
+// resp
+
+// will contain that data as a string:
+
+// '{ "name": "Kaneki" }'
+
+// And here's where this connects directly to your previous question about libuv:
+
+// fs.readFile()
+//      ↓
+// Node.js
+//      ↓
+// libuv / OS filesystem handling
+//      ↓
+// File is read
+//      ↓
+// callback gets executed
+//      ↓
+// (err, resp)
+
+// So fs.readFile() is a classic example of asynchronous I/O in Node.js.
+//  It doesn't make JavaScript sit there waiting for the file to finish reading. 🔥
+
+
+
+
+// Absolutely, Kaneki 😄. This is one of those things that becomes really
+//  easy once you understand what the callback actually is.
+
+// Look at your code:
+
+// fs.readFile("data.json", "utf-8", (err, resp) => {
+//     console.log(resp);
+// });
+
+// The important thing is:
+
+// (err, resp) => {
+//     console.log(resp);
+// }
+
+// This is simply a function.
+
+// You're passing that function to readFile().
+
+// Think of it like this
+
+// You could write:
+
+// function done(err, resp) {
+//     console.log(resp);
+// }
+
+
+// fs.readFile("data.json", "utf-8", done);
+
+// That's exactly the same basic idea.
+
+// You're saying:
+
+// "Hey readFile, go read this file. When you're finished, call this function."
+
+// That's why it's called a callback.
+
+// What happens internally?
+
+// Imagine:
+
+// fs.readFile("data.json", "utf-8", callback);
+
+// Node starts the file operation.
+
+// JavaScript
+//     ↓
+// fs.readFile()
+//     ↓
+// "Okay, I'll read this file."
+//     ↓
+// JavaScript continues doing other work
+
+// When the file has been read:
+
+// File reading finished
+//         ↓
+// Node gets the result
+//         ↓
+// Node calls your callback
+//         ↓
+// callback(err, resp)
+
+// So this:
+
+// (err, resp) => {
+//     console.log(resp);
+// }
+
+// doesn't execute immediately when you pass it.
+
+// It gets called later.
+
+
+
+// how to create server
+
+
+// Yep, Kaneki 😎 Let's nail client vs server first. This is the foundation of backend.
+
+// Think of it like this:
+
+//              INTERNET
+//                 │
+//         ┌───────┴────────┐
+//         ↓                ↓
+//      CLIENT           SERVER
+//    (your browser)   (another computer)
+// 🧑‍💻 Client
+
+// The client is the device/software that requests something from a server.
+
+// For web development, your browser is usually the client.
+
+// For example, when you open:
+
+// youtube.com
+
+// your browser says:
+
+// "Server, give me YouTube's webpage."
+
+// Or when React does:
+
+// fetch("/api/products")
+
+// the browser is acting as the client and requesting products.
+
+// Other examples of clients:
+
+// Chrome
+// Firefox
+// Mobile apps
+// React frontend
+// Postman
+// Another backend server
+// 🖥️ Server
+
+// A server is a computer/program that waits for requests and responds to them.
+
+// For example:
+
+// Client
+//   |
+//   | "Give me users"
+//   ↓
+// Server
+//   |
+//   | talks to database
+//   ↓
+// Database
+//   |
+//   | users
+//   ↓
+// Server
+//   |
+//   | sends users
+//   ↓
+// Client
+
+// A Node.js backend could be the server.
+
+// For example:
+
+// app.get("/users", (req, res) => {
+//     res.json([
+//         { name: "Mio" },
+//         { name: "Alex" }
+//     ]);
+// });
+
+// When the client requests:
+
+// GET /users
+
+// the server executes that code and sends the response.
+
+// 🔥 The key difference
+
+// Don't think:
+
+// Client = frontend
+// Server = backend
+
+// That's usually true in our web-development context, but the deeper definition is:
+
+// Client = requester
+
+// Server = provider/respondent
+
+// For example:
+
+// React ───────→ Node.js
+// client          server
+//                  │
+//                  ↓
+//               MongoDB
+
+// And here's a cool thing: your laptop can be both a client and a server.
+
+// When you're developing:
+
+// Browser
+//    ↓
+// localhost:5173
+//    ↓
+// Vite server
+
+// Your browser is the client, while Vite is acting as a server.
+
+// Later, when you run:
+
+// localhost:3000
+
+// with Node/Express, your Node process becomes the server.
+
+// So next we should understand what exactly happens when the
+//  client sends a request to the server — that's where HTTP comes in. 🚀
+
+
+
+
+
+// IP address and port number
+
+
+// Yep, Kaneki 😄 Let’s make this super clear because IP address + port number is one of those networking basics that becomes really important for backend.
+
+// Think of a computer/server like a building:
+
+// IP address = building's address
+// Port number = specific room/door inside that building
+
+// For example:
+
+// 192.168.1.10:3000
+
+// Here:
+
+// 192.168.1.10 → IP address
+// 3000 → Port number
+// 🏠 IP address
+
+// An IP address identifies a device on a network.
+
+// Example:
+
+// 192.168.1.10
+
+// It tells the network roughly:
+
+// "Send this data to this particular machine."
+
+// Your laptop, phone, server, etc. can have an IP address.
+
+// 🚪 Port number
+
+// A single computer can run many applications/services at the same time.
+
+// For example:
+
+// Computer
+// │
+// ├── Port 80    → HTTP server
+// ├── Port 443   → HTTPS server
+// ├── Port 3000  → React/Node application
+// ├── Port 5432  → PostgreSQL
+// └── Port 22    → SSH
+
+// The port tells the computer:
+
+// "Which application should receive this data?"
+
+// So:
+
+// 192.168.1.10:3000
+
+// means:
+
+// Go to computer 192.168.1.10, then deliver
+//  the request to whatever application is listening on port 3000.
+
+// 🌐 When you run a backend
+
+// Suppose you create an Express server:
+
+// app.listen(3000);
+
+// Your server is listening on:
+
+// localhost:3000
+
+// localhost usually means your own computer.
+
+// So when you open:
+
+// http://localhost:3000
+
+// the request goes:
+
+// Browser
+//    ↓
+// localhost (your computer)
+//    ↓
+// Port 3000
+//    ↓
+// Your Node/Express server
+
+// And this is why you'll see things like:
+
+// http://localhost:5173
+
+// for Vite, and commonly:
+
+// http://localhost:3000
+
+// for a Node/Express backend.
+
+// One important distinction: IP address identifies 
+// the machine; port identifies the service/application on that machine. 🔥
+
+
+
+
+// TTP and HTTPS are protocols used for communication between a client and a server.
+
+// Think of it like this:
+
+// Browser (Client)
+//       ↓
+//    HTTP/HTTPS
+//       ↓
+// Server
+// HTTP
+
+// HTTP = HyperText Transfer Protocol
+
+// It's a set of rules that says how the browser and server communicate.
+
+// For example, when you visit:
+
+// http://example.com
+
+// your browser sends an HTTP request to the server:
+
+// "Hey server, give me the webpage."
+
+// The server sends back an HTTP response:
+
+// "Sure, here is the webpage."
+
+// So:
+
+// Client ─── HTTP Request ───→ Server
+// Client ←── HTTP Response ─── Server
+// HTTPS
+
+// HTTPS = HTTP Secure
+
+// It's basically HTTP with encryption using TLS.
+
+// With normal HTTP, someone who can observe the network traffic may be able to read the data.
+
+// With HTTPS:
+
+// Browser
+//    ↓
+// 🔐 Encrypted communication
+//    ↓
+// Server
+
+// The data is encrypted while traveling between the client and server.
+
+// That's why websites handling things like passwords, payments, and personal information use HTTPS.
+
+// HTTP vs HTTPS
+// HTTP	HTTPS
+// Not encrypted	Encrypted
+// Less secure	Much more secure
+// http://	https://
+// Usually port 80	Usually port 443
+
+// So when you see:
+
+// https://google.com
+
+// you can think:
+
+// HTTPS
+//   ↓
+// Secure communication
+//   ↓
+// Google's server
+
+// And connecting this to what we just learned:
+
+// https://example.com:443
+//         │          │
+//         │          └── Port
+//         └───────────── Domain → IP address
+
+// The browser ultimately needs an IP address + 
+// port, while HTTP/HTTPS defines how the conversation happens.
+
+// And one tiny but important correction to keep in your
+//  head: HTTPS doesn't mean the website itself is trustworthy. It means the connection is encrypted/authenticated with TLS. 🔐
+
+
+
+// Ahhh 😄 you mean “why does HTTPS have a port?”
+
+// Because HTTPS is a network service, and the computer needs to know which port to use to reach that service.
+
+// Imagine your server is a building:
+
+// Server IP
+//    │
+//    ├── 🚪 Port 22  → SSH
+//    ├── 🚪 Port 80  → HTTP
+//    ├── 🚪 Port 443 → HTTPS
+//    └── 🚪 Port 5432 → PostgreSQL
+
+// When you type:
+
+// https://example.com
+
+// the browser knows:
+
+// "This is HTTPS, so I'll connect to port 443 by default."
+
+// So it's effectively:
+
+// https://example.com:443
+//                   ↑
+//                 port
+
+// You normally don't see :443 because 443 is the standard/default port for HTTPS.
+
+// Similarly:
+
+// http://example.com
+
+// means:
+
+// http://example.com:80
+//                   ↑
+//                 port
+
+// because 80 is the standard port for HTTP.
+
+// Why does it need a port at all?
+
+// Because one server can run MANY services.
+
+// For example:
+
+//               SERVER
+//                 │
+//         ┌───────┼────────┐
+//         ↓       ↓        ↓
+//       :80     :443     :22
+//        │        │        │
+//       HTTP    HTTPS     SSH
+
+// The IP address finds the computer, while the port finds the service on that computer.
+
+// So the important chain is:
+
+// Domain → IP → Port → Service
+
+// And then HTTP/HTTPS defines the communication rules with that service. 🔥
+
+
+
+// Yep, Kaneki 😄 WebSocket is a really important concept once you understand HTTP.
+
+// The easiest way to understand it is by comparing it with normal HTTP.
+
+// HTTP: request → response
+
+// With normal HTTP, the client usually asks the server for something:
+
+// Browser ──── Request ────→ Server
+// Browser ←─── Response ──── Server
+
+// For example:
+
+// GET /messages
+
+// Server:
+
+// Here are your messages.
+
+// The connection doesn't stay around just so the server can randomly send you new data.
+
+// WebSocket: continuous connection 🔄
+
+// WebSocket creates a persistent, two-way connection between the client and server.
+
+// Browser ═══════════════════ Server
+//           WebSocket
+
+// Now both sides can send data whenever they need to:
+
+// Browser ─────────→ Server
+// Browser ←───────── Server
+// Browser ─────────→ Server
+// Browser ←───────── Server
+
+// The server doesn't have to wait for the browser to ask again.
+
+// WebSocket: continuous connection 🔄
+
+// WebSocket creates a persistent, two-way connection between the client and server.
+
+// Browser ═══════════════════ Server
+//           WebSocket
+
+// Now both sides can send data whenever they need to:
+
+// Browser ─────────→ Server
+// Browser ←───────── Server
+// Browser ─────────→ Server
+// Browser ←───────── Server
+
+// The server doesn't have to wait for the browser to ask again.
+
+// Real-world example: chat app
+
+// Imagine you're chatting with someone.
+
+// With ordinary HTTP, the browser might repeatedly ask:
+
+// Browser → "Any new messages?"
+// Server  → "No."
+
+
+// Browser → "Any new messages?"
+// Server  → "No."
+
+
+// Browser → "Any new messages?"
+// Server  → "YES! Here's a message."
+
+// That's inefficient.
+
+// With WebSocket:
+
+// Browser ═══════════════ Server
+//           connection
+//              │
+//              │
+//              ← "New message!"
+//              │
+//              → "Okay!"
+//              │
+//              ← "Another message!"
+
+// The server can immediately push information to the browser. ⚡
+
+// Where is WebSocket useful?
+
+// Things that need real-time communication, such as:
+
+// 💬 Chat applications
+// 🎮 Multiplayer games
+
+
+
+// Socket = communication endpoint
+
+// HTTP = communication protocol
+
+// WebSocket = persistent two-way communication protocol 🔥
+
+
+// Yep, Kaneki 😄❤️ Your code is correct. You've just created your first basic Node.js HTTP server.
+
+// const http = require("http");
+
+
+// const server = http.createServer((req, res) => {
+//     res.end("Heelo coder army");
+// });
+
+
+// server.listen(400, () => {
+//     console.log("i am listeninng at port 400");
+// });
+
+// Here's exactly what's happening:
+
+// const http = require("http");
+
+// You're importing Node's built-in HTTP module. You don't need to install it with npm.
+
+// Then:
+
+// const server = http.createServer((req, res) => {
+
+// createServer() creates an HTTP server.
+
+// Whenever someone sends a request to your server, this callback runs:
+
+// (req, res) => { ... }
+// req = request coming from the client
+// res = response you're going to send to the client
+
+// Then:
+
+// res.end("Heelo coder army");
+
+// You're saying:
+
+// Send "Heelo coder army" to the client and finish the response.
+
+// Finally:
+
+// server.listen(400, () => {
+
+// This tells Node:
+
+// Start listening for incoming connections on port 400.
+
+// So your browser can access:
+
+// http://localhost:400
+
+// And the flow is:
+
+// Browser
+//    │
+//    │ HTTP Request
+//    ↓
+// localhost:400
+//    │
+//    ↓
+// Node HTTP Server
+//    │
+//    ↓
+// (req, res) => { ... }
+//    │
+//    ↓
+// res.end("Heelo coder army")
+//    │
+//    ↓
+// Browser displays:
+// Heelo coder army
+
+// And this callback:
+
+// () => {
+//     console.log("i am listeninng at port 400");
+// }
+
+// runs once the server successfully starts listening.
+
+// One tiny thing: 400 works perfectly, but developers commonly use ports like 3000,
+// 4000, 5000, 8080, etc. So you could use:
+
+// server.listen(4000, () => {
+//     console.log("Server listening on port 4000");
+// });
+
+// Also, your "Heelo" and "listeninng" are just spelling mistakes in the displayed text/log — they don't affect how the server works. 😄
+
+// You're at the exact point where you can start understanding request → response → routes 
+// → methods → headers → status codes. That's the fun backend stuff. 🚀/

@@ -16,3 +16,32 @@
 
 // so to use import and export write first.mjs second.mjs
 // or make a package.json and write "type": "module"
+
+// const fs=require("fs")
+// fs.readFile("./file.json","utf-8",(error,response)=>{
+//     console.log(response);
+    
+// })
+
+// how to create server in Node.js
+
+
+const http=require("http")
+
+const server=http.createServer((req,res)=>{
+    // res.end("Heelo coder army")
+    if(req.url==="/"){
+        res.end("helo coder army");
+    }
+    else if(req.url=="/contact"){
+        res.end("this is contact page")
+    }
+    else {
+        res.end("not found")
+    }
+
+})
+
+server.listen(400,()=>{
+    console.log("i am listeninng at port 400")
+})
