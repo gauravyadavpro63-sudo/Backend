@@ -26,22 +26,52 @@
 // how to create server in Node.js
 
 
-const http=require("http")
+// const http=require("http")
 
-const server=http.createServer((req,res)=>{
-    // res.end("Heelo coder army")
-    if(req.url==="/"){
-        res.end("helo coder army");
-    }
-    else if(req.url=="/contact"){
-        res.end("this is contact page")
-    }
-    else {
-        res.end("not found")
-    }
+// const server=http.createServer((req,res)=>{
+//     // res.end("Heelo coder army")
+//     if(req.url==="/"){
+//         res.end("helo coder army");
+//     }
+//     else if(req.url=="/contact"){
+//         res.end("this is contact page")
+//     }
+//     else {
+//         res.end("not found")
+//     }
 
-})
+// })
 
-server.listen(400,()=>{
-    console.log("i am listeninng at port 400")
-})
+// server.listen(400,()=>{
+//     console.log("i am listeninng at port 400")
+// })
+
+
+// Express 
+
+// const express=require("express");
+// const app=express();
+
+// #order important for routing
+// app.use("/co?nt+ac*t",(req,res)=>{   
+//     // {?:makes o optional  +:t kitne bar bhi repeat ho skata hai  *:c ke baad kuch bhi a sakta hai magar end t se hona chiye}
+//     res.send("I am contact")
+// })
+
+// app.use("/dashboard/:id",(req,res)=>{   
+//     // {params}
+//     console.log(req.params)
+//     res.send("this is dashboard")
+// })
+
+
+// app.use("/",(req,res)=>{
+//     res.send("hello coder army and clan");
+// })
+
+
+
+// app.listen(400,()=>{
+//     console.log("listening to port 4000");
+// })
+
