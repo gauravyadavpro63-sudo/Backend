@@ -61,8 +61,10 @@
 // app.use("/dashboard/:id",(req,res)=>{   
 //     // {params}
 //     console.log(req.params)
-//     res.send("this is dashboard")
+//     // res.send("this is dashboard")
+//     res.send("name :"+req.params.id);
 // })
+
 
 
 // app.use("/",(req,res)=>{
@@ -75,3 +77,67 @@
 //     console.log("listening to port 4000");
 // })
 
+
+
+// app.use(express.json());
+// app.get("/",(req,res)=>{
+//     res.send({name:"rohit"});
+// })
+
+// app.post("/",(req,res)=>{
+//     res.send("data saved succesfully");
+//     console.log(req.body);
+// })
+
+// app.listen(400,()=>{
+//     console.log("listening to port 4000");
+// })
+
+
+
+
+// book store project 
+const Bookstore=[
+    {id:1,
+        name:"kaneki",
+        author:"gaurav",
+
+    },
+    {
+        id:2,
+        name:"princess",
+        author:"anshika"
+    },
+    {
+        id:3,
+        name:"metamorphism",
+        author:"frenz kafka"
+    }
+    
+
+]
+
+const express=require("express");
+const app=express();
+
+app.use(express.json());
+
+app.get("/book",(req,res)=>{
+    res.send(Bookstore);
+})
+
+app.get("/book/:id",(req,res)=>{
+const id= Number(req.params.id)
+const book=Bookstore.find(info=>info.id===id);
+res.send(book);
+})
+
+
+app.post("/book",(req,res)=>{
+Bookstore.push(req.body);
+res.send("data saved succesfully");
+})
+
+app.listen(5000,()=>{
+    console.log("listenig to port 5000")
+})
