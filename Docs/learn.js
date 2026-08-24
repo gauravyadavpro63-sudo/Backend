@@ -2163,3 +2163,157 @@ JSON and JavaScript objects look similar, but they are not the same.
 // console.log(data);
 
 // Now React has a copy of the data.
+
+
+// Bro, in your Express/backend context, query usually means information you send to the server through the URL to tell 
+// it what you want.
+
+// There are actually a few meanings of "query," but you're probably talking about a query parameter.
+
+// For example:
+
+// http://localhost:3000/book?id=5
+
+
+
+//    middleware
+
+
+
+// Bro, API stands for Application Programming Interface.
+
+// But the expansion isn't nearly as important as understanding what it actually does. 😄
+
+// In your Express learning, think of an API as a way for one program to communicate with another program.
+
+// For example, imagine you have:
+
+// Frontend (React)
+//        ↓
+//       API
+//        ↓
+// Backend (Express)
+//        ↓
+//    Database
+
+// Your React frontend might say:
+
+// "Give me all the books."
+
+// It sends a request:
+
+// GET /books
+
+// Your Express backend has an API endpoint:
+
+// app.get("/books", (req, res) => {
+//     res.json(Bookstore);
+// });
+
+// The backend sends the data back:
+
+// [
+//   {
+//     "id": 1,
+//     "name": "Harry Potter",
+//     "author": "J.K. Rowling"
+//   }
+// ]
+
+// So the API is basically the communication interface between your frontend and backend.
+
+// Think of it like a waiter 🍽️
+
+// Imagine a restaurant:
+
+// You              → Customer
+// Frontend         → Customer
+
+// Waiter            → API
+
+// Kitchen            → Backend
+// Database           → Storage
+
+// You don't walk into the kitchen and directly grab food.
+
+// You tell the waiter:
+
+// "I want a burger."
+
+// The waiter takes your request to the kitchen.
+
+// The kitchen prepares it.
+
+// The waiter brings it back.
+
+// Similarly:
+
+// React
+//   ↓
+// GET /books
+//   ↓
+// API
+//   ↓
+// Express
+//   ↓
+// Database
+//   ↓
+// Express
+//   ↓
+// JSON response
+//   ↓
+// React
+// Your Express routes are API endpoints
+
+// For example:
+
+// app.get("/books", ...)
+// app.post("/books", ...)
+// app.patch("/books", ...)
+// app.delete("/books/:id", ...)
+
+// These can form your Book API.
+
+// You could have:
+
+// GET    /books       → get all books
+// GET    /books/5     → get book 5
+// POST   /books       → create a book
+// PATCH  /books/5     → update book 5
+// DELETE /books/5     → delete book 5
+
+// And your frontend communicates with them using fetch():
+
+// const response = await fetch("http://localhost:3000/books");
+
+// const books = await response.json();
+
+// So when you were asking earlier "what is frontend doing with fetch?", this is the connection:
+
+// Frontend
+//    │
+//    │ fetch()
+//    ▼
+// API endpoint
+//    │
+//    ▼
+// Express backend
+//    │
+//    ▼
+// Database
+
+// One important distinction:
+
+// API ≠ backend.
+
+// The backend is the whole server-side system.
+
+// The API is the interface/endpoints that allow other programs to communicate with that backend.
+
+// So when someone says:
+
+// "Connect the frontend to the API"
+
+// they basically mean:
+
+// "Make the frontend send HTTP requests to the backend's endpoints and use the responses." 🚀

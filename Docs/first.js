@@ -96,48 +96,108 @@
 
 
 
-// book store project 
-const Bookstore=[
-    {id:1,
-        name:"kaneki",
-        author:"gaurav",
+// // book store project 
+// const Bookstore=[
+//     {id:1,
+//         name:"kaneki",
+//         author:"gaurav",
 
-    },
-    {
-        id:2,
-        name:"princess",
-        author:"anshika"
-    },
-    {
-        id:3,
-        name:"metamorphism",
-        author:"frenz kafka"
-    }
+//     },
+//     {
+//         id:2,
+//         name:"princess",
+//         author:"anshika"
+//     },
+//     {
+//         id:3,
+//         name:"metamorphism",
+//         author:"frenz kafka"
+//     }
     
 
-]
+// ]
 
-const express=require("express");
+// const express=require("express");
+// const app=express();
+
+// app.use(express.json());
+
+// // app.get("/book",(req,res)=>{
+// //     res.send(Bookstore);
+// // })
+
+// app.get("/book",(req,res)=>{
+//    const books= Bookstore.filter(info=>info.author===req.query.author)
+//     res.send(books);
+// })
+// app.get("/book/:id",(req,res)=>{
+// const id= Number(req.params.id)
+// const book=Bookstore.find(info=>info.id===id);
+// res.send(book);
+// })
+
+
+// app.post("/book",(req,res)=>{
+// Bookstore.push(req.body);
+// res.send("data saved succesfully");
+// })
+
+// app.patch("/book",(req,res)=>{
+//     const book= Bookstore.find(info=>info.id===req.body.id);
+//     if(req.body.author){
+//     book.author=req.body.author;
+//     }
+//     if(req.body.name){
+//         book.name=req.body.name;
+//     }
+
+//     res.send("patch  updated");
+// })
+
+// app.put("/book",(req,res)=>{
+//     const book=Bookstore.find(info=>info.id===req.body.id);
+//      book.author=req.body.author;
+//      book.name=req.body.name;
+//      res.send("put updated")
+// })
+// app.delete("/book/:id",(req,res)=>{
+//     const id=Number(req.params.id);
+//     const index=Bookstore.findIndex(info=>info.id===id);
+//     Bookstore.splice(index,1);
+//     res.send("data deleted")
+// })
+
+
+// app.listen(5000,()=>{
+//     console.log("listenig to port 5000")
+// })
+
+
+
+
+
+
+
+
+
+
+
+//    MIDDLEWARE
+const express=require("express")
 const app=express();
 
-app.use(express.json());
 
-app.get("/book",(req,res)=>{
-    res.send(Bookstore);
-})
-
-app.get("/book/:id",(req,res)=>{
-const id= Number(req.params.id)
-const book=Bookstore.find(info=>info.id===id);
-res.send(book);
-})
+app.use("/user",(req,res,next)=>{
+// res.send("heelo ji")
+next()     // call the next function but wont run because only one res per req
+},
+(req,res)=>{
+    res.send("heelooo ji")
+} 
+)
 
 
-app.post("/book",(req,res)=>{
-Bookstore.push(req.body);
-res.send("data saved succesfully");
-})
 
-app.listen(5000,()=>{
-    console.log("listenig to port 5000")
+app.listen(3000,()=>{
+    console.log("listening at port 3000");
 })
