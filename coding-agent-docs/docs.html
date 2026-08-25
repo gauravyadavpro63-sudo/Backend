@@ -1,0 +1,339 @@
+Absolutely, Kaneki. This is actually a really good way to use coding agents. The goal shouldn't be “AI builds the dashboard while I watch.” It should be:
+
+AI writes code → you understand what it wrote → you review it → AI commits a small logical change → repeat.
+
+That way, after a week you don't look at the repo and think “bro, what the hell did the AI create?” 😭
+
+The biggest thing is to give the agent rules before giving it the feature.
+
+1. Give the agent a "working agreement" first
+
+Tell it something like:
+
+You are helping me build the dashboard, but I am learning the codebase.
+Do not make large changes in one step. Break the work into small, logically complete tasks.
+Before modifying code, explain which files you plan to change and why.
+After each small task, show me what changed and explain the important code in simple terms.
+Do not introduce libraries or architectural patterns without explaining why they are needed.
+Reuse existing components, utilities, types, API functions, and styling patterns whenever possible.
+Keep the existing project architecture and conventions.
+Do not rewrite unrelated code.
+Do not modify files unnecessarily.
+After completing each logical task, run the appropriate checks/tests/type checks.
+If the task is successful, create a Git commit containing only that logical change.
+Use small, descriptive commit messages.
+Never combine multiple unrelated features into one commit.
+Before committing, show me the files changed and summarize the change.
+If you are unsure about something, stop and explain the uncertainty instead of guessing.
+
+This establishes the behavior of the agent, not just the feature you're asking it to build.
+
+2. Don't say "build the dashboard"
+
+This is probably the biggest mistake you can make.
+
+If you say:
+
+Build the complete dashboard.
+
+The agent might touch 30 files, create components, modify routing, invent APIs, install packages, change styles, etc.
+
+Then you're sitting there like:
+
+Dashboard.tsx — 800 lines
+
+You: 🗿
+Agent: “Done.”
+
+Instead, divide it into tiny milestones.
+
+For example:
+
+Phase 1 — Understand the existing application
+
+Ask:
+
+Explore the existing frontend architecture. Don't modify anything. Identify the relevant routes, components, API layer, types, mock data, styling system, and patterns that the dashboard should follow. Explain how these pieces currently work.
+
+Now YOU learn the repo.
+
+Then:
+
+Phase 2 — Dashboard route
+
+Create only the dashboard route using the existing routing conventions. Don't build the UI yet. Explain which file handles the route and how the route is reached.
+
+Commit.
+
+Phase 3 — Layout
+
+Add the dashboard layout/sidebar using existing UI patterns. Don't implement data fetching yet.
+
+Commit.
+
+Phase 4 — One card
+
+Implement the first dashboard card using the existing component conventions. Explain the data flow from source → component → UI.
+
+Commit.
+
+Phase 5 — API integration
+
+Connect this card to the existing API/mock API. Don't modify unrelated endpoints.
+
+Commit.
+
+And so on.
+
+This keeps the project understandable.
+
+3. Make the agent explain the code BEFORE you move on
+
+This is extremely important for you because you're trying to actually learn development.
+
+After every meaningful change, ask:
+
+Explain the code you just added as if I'm going to maintain it myself.
+Start with the data flow, then explain each important file, then explain the most important functions/components.
+Don't explain obvious syntax unless it is relevant.
+
+For example, if the agent creates:
+
+const { data, isLoading } = useQuery(...)
+
+You shouldn't just accept it.
+
+Ask:
+
+Explain exactly where data comes from, who makes the request, when the request happens, what isLoading represents, and what happens when the request fails.
+
+That's how you turn AI-generated code into your knowledge.
+
+4. Make commits VERY small
+
+I strongly recommend this rule:
+
+One commit = one logical change.
+
+Good:
+
+feat: add dashboard route
+feat: add dashboard sidebar
+feat: add demand summary card
+feat: connect demand summary to API
+fix: handle empty demand response
+
+Bad:
+
+feat: complete dashboard
+
+Because six hours later you won't know what that commit actually changed.
+
+And yes — your earlier thought about context windows and frequent commits was correct.
+
+Frequent commits are basically save points for an AI coding session. 🧠💾
+
+If the agent's context gets messy, you can start a fresh session and say:
+
+Read the current codebase and continue from the latest commit. Do not assume previous conversation context. First inspect the existing implementation and explain the current state.
+
+Much safer.
+
+5. Give the agent permission to STOP
+
+This is underrated.
+
+Tell it:
+
+If you discover that the existing architecture is different from what you expected, stop before making a large change and explain the situation.
+
+Otherwise agents sometimes go:
+
+“I need an API.”
+
+and suddenly:
+
+new API layer
+new service
+new abstraction
+new hook
+new utility
+new package
+new architecture
+
+😂
+
+You want the agent to adapt to the codebase, not redesign your company project because it had a clever Tuesday afternoon.
+
+6. Use a loop like this
+
+Your development cycle should look like:
+
+YOU
+ ↓
+Give ONE small task
+ ↓
+AI
+ ↓
+Inspects existing code
+ ↓
+Explains planned changes
+ ↓
+YOU
+ ↓
+Approve
+ ↓
+AI
+ ↓
+Implements
+ ↓
+Runs checks
+ ↓
+Explains changes
+ ↓
+YOU understand/review
+ ↓
+AI commits
+ ↓
+Next task
+
+That's a much better workflow than:
+
+YOU → "Build dashboard"
+AI → 47 files changed
+YOU → "looks good 👍"
+
+😭
+
+7. Have the agent maintain a small architecture document
+
+This would be especially useful for your situation.
+
+Ask the agent to maintain something like:
+
+docs/dashboard-architecture.md
+
+with things such as:
+
+Dashboard
+│
+├── Route
+│
+├── Layout
+│   ├── Sidebar
+│   └── Header
+│
+├── Data
+│   ├── API
+│   ├── Types
+│   └── Hooks
+│
+└── Components
+    ├── DemandCard
+    ├── InventoryCard
+    └── RecentActivity
+
+And whenever architecture changes, update that document.
+
+Then you have a map of the codebase instead of relying on the AI's memory.
+
+8. Your master prompt
+
+I'd actually keep a reusable prompt like this and paste it into your coding agent at the beginning of
+ the project:
+
+Coding Agent Working Agreement
+
+I am learning this codebase while building the dashboard, so prioritize maintainability and my understanding
+ of the implementation.
+
+Development approach
+Work in small, logically complete tasks.
+Never implement the entire feature at once unless explicitly requested.
+Before making changes, inspect the existing architecture and identify the relevant files.
+Before implementation, briefly explain:
+what you plan to change
+which files you expect to modify
+why those files need to change
+how the change fits into the existing architecture
+Reuse existing components, utilities, hooks, API patterns, types, styling conventions, and libraries whenever possible.
+Do not introduce new libraries, abstractions, or architectural patterns without explaining the reason.
+Do not rewrite unrelated code.
+Avoid unnecessary refactoring.
+Learning requirement
+
+After each meaningful implementation:
+
+Summarize what changed.
+Explain the important files.
+Explain the data flow.
+Explain important functions, components, hooks, or types.
+Point out anything that I should understand before continuing.
+
+Explain concepts clearly, but don't explain basic syntax unnecessarily.
+
+Git requirements
+
+Keep commits small and logical.
+
+One commit should represent one coherent change.
+
+Examples:
+
+feat: add dashboard route
+feat: add dashboard layout
+feat: add demand summary card
+feat: connect demand card to API
+fix: handle empty dashboard response
+
+Do not combine unrelated changes into one commit.
+
+Before committing:
+
+Show the files that changed.
+Summarize the changes.
+Run the appropriate tests, linting, type checking, or build checks.
+Tell me whether those checks passed.
+
+Only then create the commit.
+
+Safety rules
+Do not make large architectural changes without stopping and explaining them.
+If existing code differs from your assumptions, inspect it and adapt rather than guessing.
+If you are uncertain about an important design decision, stop and explain the alternatives.
+Do not silently install dependencies.
+Do not silently change APIs or database schemas.
+Do not modify unrelated files.
+Preserve existing behavior unless the current task requires changing it.
+Context management
+
+Assume that the conversation context may eventually be lost.
+
+Keep the repository understandable from the code and documentation itself.
+
+After significant architectural changes, update the relevant architecture documentation.
+
+At the beginning of a new session, inspect the current repository and recent commits before continuing. 
+Do not assume that you remember previous conversation context.
+
+Default workflow
+
+For every task, follow:
+
+Inspect.
+Explain the current relevant architecture.
+Propose a small change.
+Implement only that change.
+Run checks.
+Explain the implementation.
+Show changed files.
+Commit the logical change.
+Wait for the next task.
+
+One more thing, Kaneki: don't let the agent become your substitute for thinking. Let it be your pair
+ programmer.
+
+A really good habit is: whenever it generates something unfamiliar, ask yourself “Could I explain this code 
+to another developer?” If the answer is no, pause and make the agent teach you that piece before continuing.
+
+That's how you can use AI heavily and still come out of the project actually knowing how the dashboard works. 💪
