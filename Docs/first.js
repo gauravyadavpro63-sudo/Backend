@@ -186,18 +186,23 @@
 const express=require("express")
 const app=express();
 
-
+// routehandler
 app.use("/user",(req,res,next)=>{
-// res.send("heelo ji")
-next()     // call the next function but wont run because only one res per req
+    console.log("1")
+// res.send("hii")
+next()     // call the next function but wont run because only one res per req  happen
+console.log(2);
 },
 (req,res)=>{
+    console.log(3);
     res.send("heelooo ji")
 } 
 )
-
+//  output: 1,3,2
 
 
 app.listen(3000,()=>{
     console.log("listening at port 3000");
 })
+
+// app.use("/user",[r1,r2,r3,r4])    we can wrap in array two 
