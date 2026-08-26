@@ -183,26 +183,99 @@
 
 
 //    MIDDLEWARE
-const express=require("express")
-const app=express();
+// const express=require("express")
+// const app=express();
 
 // routehandler
-app.use("/user",(req,res,next)=>{
-    console.log("1")
-// res.send("hii")
-next()     // call the next function but wont run because only one res per req  happen
-console.log(2);
-},
-(req,res)=>{
-    console.log(3);
-    res.send("heelooo ji")
-} 
-)
+// app.use("/user",(req,res,next)=>{
+//     console.log("1")
+// // res.send("hii")
+// next()     // call the next function but wont run because only one res per req  happen
+// console.log(2);
+// },
+// (req,res)=>{
+//     console.log(3);
+//     res.send("heelooo ji")
+// } 
+// )
 //  output: 1,3,2
 
 
-app.listen(3000,()=>{
-    console.log("listening at port 3000");
-})
+// app.listen(3000,()=>{
+//     console.log("listening at port 3000");
+// })
 
 // app.use("/user",[r1,r2,r3,r4])    we can wrap in array two 
+
+
+
+                                                          // project
+//project
+
+
+ const express = require("express");
+ const app=express();
+
+
+ app.use(express.json());
+
+  const foodItems=[
+    {id:1,name:"burger",type:"non-veg",price:3300},
+    {id:2,name:"chicken",type:"non-veg",price:300},
+    {id:3,name:"ice-cream",type:"non-veg",price:2300},
+    {id:4,name:"dosa",type:"non-veg",price:300},
+    {id:5,name:"cococola",type:"non-veg",price:3300},
+    {id:6,name:"paties",type:"non-veg",price:300},
+    {id:7,name:"paneer",type:"non-veg",price:3020},
+    {id:8,name:"water",type:"non-veg",price:3030},
+    {id:9,name:"daal chawal",type:"non-veg",price:3300},
+    {id:10,name:"raita",type:"non-veg",price:3400},
+  ]
+
+  const cartItems=[];
+  app.get("/food",(req,res)=>{
+    res.status(200).send(foodItems);
+  })
+
+  app.post("/admin",(req,res)=>{
+    //add items in fooditems
+    //authentication karna padega ki ye admin hai ya nhi
+    //dummy code
+    const token="sdfdsf";
+    const Access=token==="sdfdsf"?1:0;
+    if(Access){
+        foodItems.push(req.body);
+       
+        res.status(201).send("items added successfully");
+    }
+    else{
+        res.status(401).send("items cant be added");
+    }
+  })
+
+  app.delete("/food/:id",(req,res)=>{
+    const id=Number(req.params.id);
+    const index=foodItems.findIndex(items=>items.id===id);
+     if(index===-1){
+        res.status(404).send("not found");
+     }
+     else{
+        foodItems.splice(index,1);
+        console.log(foodItems);
+        res.status(200).send("deleted succesfully");
+     }
+  })
+
+
+app.patch("/admin",(req,res)=>{
+  const food=foodItems.find(items=>items.id===req.body.id);
+  food.price=req.body.price;
+  res.send("patch succesfull");
+})
+
+
+
+
+ app.listen(3000,()=>{
+    console.log("listening at port 3000");
+ })
