@@ -274,8 +274,47 @@ app.patch("/admin",(req,res)=>{
 })
 
 
+app.post("/user/:id",(req,res)=>{
+  const id=Number(req.params.id);
+  const item=foodItems.find(items=>items.id===id);
+  if(item){
+   cartItems.push(item);
+   res.send("added to cart")
+  }
+  else{
+    res.status(404).send("not added")
+  }
+})
+app.get("/cart",(req,res)=>{
+  res.send(cartItems);
+})
+
+
+
+
+
+  // ERROR HANDLING IN MIDLEWARE
+
+
+  
+
+app.get("/user",(req,res)=>{
+  try{
+  JSON.perse("dfasd");    //this will throw error so we need to handle that
+  res.send("heelo coders")
+  }
+  catch(err){
+res.send("some error occured")
+  }
+})
+
 
 
  app.listen(3000,()=>{
     console.log("listening at port 3000");
  })
+
+
+
+
+  // DATABASE

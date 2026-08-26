@@ -2714,3 +2714,348 @@ JSON and JavaScript objects look similar, but they are not the same.
 // 5xx — Server error: 500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable, 504 Gateway Timeout.
 
 // If you give me a specific status code (for example, 404 or 502), I can explain exactly what it means and how to fix it.
+
+// throw new Error("Something went wrong");
+
+// Think of it as:
+
+// "Stop what you're doing and report this error."
+
+// For example:
+
+// app.get("/user/:id", (req, res) => {
+//   const id = Number(req.params.id);
+
+//   const item = foodItems.find(item => item.id === id);
+
+//   if (!item) {
+//     throw new Error("Food item not found");
+//   }
+
+//   res.send(item);
+// });
+
+// If the item isn't found:
+
+// throw new Error("Food item not found");
+
+// creates an Error object whose message is:
+
+// "Food item not found"
+
+// Then Express can pass it to your error-handling middleware:
+
+// app.use((err, req, res, next) => {
+//   console.log(err.message);
+
+//   res.status(500).send("Something went wrong");
+// });
+
+// So the flow is:
+
+// throw new Error("Food item not found")
+//               ↓
+//         Error object created
+//               ↓
+//          Express catches it
+//               ↓
+//    (err, req, res, next)
+//               ↓
+//        Error middleware
+// throw vs return
+
+// This is an important distinction:
+
+// return res.send("Error");
+
+// ➡️ Sends a response and stops the route.
+
+// throw new Error("Error");
+
+// ➡️ Creates an error and transfers control to error handling.
+
+// And you can customize the error:
+
+// const err = new Error("User not found");
+// err.status = 404;
+
+// throw err;
+
+// Then:
+
+// app.use((err, req, res, next) => {
+//   res.status(err.status || 500).send(err.message);
+// });
+
+// So the little pattern to remember is:
+
+// throw new Error("message") → create error → throw it → error middleware handles it. 🧠🔥
+
+
+// Yep, Kaneki 😄 These two are related, but they do different jobs.
+
+// throw new Error()
+
+// This creates an error and throws it.
+
+// throw new Error("User not found");
+
+// You're basically saying:
+
+// "Something went wrong here. Stop and send this error upward."
+
+// Example:
+
+// app.get("/user/:id", (req, res) => {
+//   const user = users.find(u => u.id === Number(req.params.id));
+
+//   if (!user) {
+//     throw new Error("User not found");
+//   }
+
+//   res.send(user);
+// });
+// try...catch
+
+// try...catch is used to handle an error.
+
+// try {
+//   // code that might fail
+// } catch (err) {
+//   // handle the error
+// }
+
+// Example:
+
+// try {
+//   const data = JSON.parse("hello");
+// } catch (err) {
+//   console.log(err.message);
+// }
+
+// Here JSON.parse() throws an error, and catch catches it.
+
+// How they work together
+
+// You can think of it as:
+
+// throw
+//   ↓
+// "Something went wrong!"
+//   ↓
+// catch
+//   ↓
+// "I'll handle it."
+
+// For example:
+
+// try {
+//   const user = users.find(u => u.id === 10);
+
+//   if (!user) {
+//     throw new Error("User not found");
+//   }
+
+//   console.log(user);
+// } catch (err) {
+//   console.log(err.message);
+// }
+
+// The throw raises the error.
+
+// The catch handles the error.
+
+// In Express 🚀
+
+// You often see this pattern:
+
+// app.get("/user/:id", (req, res, next) => {
+//   try {
+//     const user = users.find(
+//       u => u.id === Number(req.params.id)
+//     );
+
+//     if (!user) {
+//       throw new Error("User not found");
+//     }
+
+//     res.send(user);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+// app.use((err, req, res, next) => {
+//   res.status(500).send(err.message);
+// });
+
+// So remember:
+
+// throw new Error() = generate/raise an error
+
+// try...catch = catch and handle an error
+
+// They're not alternatives exactly — you can use them together. 🧠
+
+
+
+// Exactly, Kaneki 😄 Let's trace this code slowly because this is basically the standard Express error-handling pattern.
+
+// Your code has two parts:
+
+// The route
+// The error-handling middleware
+// 1. The route
+// app.get("/user/:id", (req, res, next) => {
+
+// The next function is important because it allows you to pass something to the next middleware.
+
+// Suppose you request:
+
+// /user/10
+
+// Then:
+
+// req.params.id
+
+// is:
+
+// "10"
+
+// So:
+
+// Number(req.params.id)
+
+// becomes:
+
+// 10
+
+// Then:
+
+// const user = users.find(
+//   u => u.id === Number(req.params.id)
+// );
+
+// searches for that user.
+
+// 2. If the user doesn't exist
+// if (!user) {
+//   throw new Error("User not found");
+// }
+
+// Suppose .find() returns:
+
+// undefined
+
+// Then !user is true.
+
+// So:
+
+// throw new Error("User not found");
+
+// creates an error and throws it.
+
+// 3. catch catches that error
+
+// Because the throw is inside try:
+
+// try {
+//    // ...
+// } catch (err) {
+//    next(err);
+// }
+
+// the error goes into:
+
+// err
+
+// So conceptually:
+
+// throw new Error("User not found")
+//                 ↓
+//               catch
+//                 ↓
+//         err = Error object
+
+// Now:
+
+// next(err);
+
+// means:
+
+// "Express, I have an error. Pass it to the error-handling middleware."
+
+// 4. Express finds the error middleware
+
+// This middleware:
+
+// app.use((err, req, res, next) => {
+//   res.status(500).send(err.message);
+// });
+
+// has 4 parameters:
+
+// err
+// req
+// res
+// next
+
+// Because it has err as the first parameter, Express recognizes it as error-handling middleware.
+
+// The err here is the same error you passed with:
+
+// next(err);
+
+// Therefore:
+
+// err.message
+
+// is:
+
+// User not found
+
+// And the client receives:
+
+// User not found
+
+// with status:
+
+// 500
+// The complete flow 🧠
+// GET /user/10
+//       ↓
+// find user
+//       ↓
+// user doesn't exist
+//       ↓
+// throw new Error("User not found")
+//       ↓
+// catch(err)
+//       ↓
+// next(err)
+//       ↓
+// Express looks for error middleware
+//       ↓
+// (err, req, res, next)
+//       ↓
+// res.status(500).send(err.message)
+
+// One small improvement: "User not found" is normally a 404, not a 500.
+
+// You could do:
+
+// if (!user) {
+//   const err = new Error("User not found");
+//   err.status = 404;
+//   throw err;
+// }
+
+// Then:
+
+// app.use((err, req, res, next) => {
+//   res.status(err.status || 500).send(err.message);
+// });
+
+// Now a missing user gives 404, while unexpected errors can still give 500. 👍
+
+
