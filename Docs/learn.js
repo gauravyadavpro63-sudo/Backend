@@ -3410,3 +3410,421 @@ JSON and JavaScript objects look similar, but they are not the same.
 
 
 
+// Yeah Kaneki 😄 — MongoDB has some advantages over SQL databases, especially when you're building modern web apps.
+
+// The biggest difference is:
+
+// SQL → tables + rows + fixed schema
+// MongoDB → collections + documents + flexible schema
+
+// Here are the main advantages of MongoDB:
+
+// Flexible schema 🧩
+// In SQL, a table usually has a defined structure:
+// Users
+// id | name | email | age
+
+// MongoDB documents can have different fields:
+
+// {
+//   "name": "Kaneki",
+//   "email": "abc@gmail.com"
+// }
+
+// Another document could have:
+
+// {
+//   "name": "John",
+//   "email": "john@gmail.com",
+//   "age": 21,
+//   "skills": ["React", "Node"]
+// }
+
+// You don't have to alter a table every time your data structure changes.
+
+// Works naturally with JSON 🚀
+// MongoDB stores data as BSON, which is very similar to JSON.
+
+// That's convenient with JavaScript/Node.js:
+
+// const user = {
+//   name: "Kaneki",
+//   skills: ["React", "Node", "MongoDB"]
+// };
+
+// So MongoDB fits very naturally into the MERN stack.
+
+// Good for rapidly changing applications ⚡
+// If you're developing a startup/product where the data model keeps changing, MongoDB can be easier.
+
+// For example:
+
+// Today:
+// User → name, email
+
+// Later:
+// User → name, email, profilePicture, skills, socialLinks
+
+// Adding new fields is straightforward.
+
+// Great for hierarchical/nested data 🌳
+
+// MongoDB can store nested objects directly:
+
+// {
+//   "name": "Kaneki",
+//   "address": {
+//     "city": "Lucknow",
+//     "country": "India"
+//   }
+// }
+
+// In a relational database, you might separate this into multiple tables depending on the design.
+
+// Easy horizontal scaling 📈
+// MongoDB supports sharding, allowing data to be distributed across multiple servers.
+
+// This can be useful when applications become extremely large.
+
+// Good performance for certain workloads ⚡
+// MongoDB can be very fast when you're mostly retrieving complete documents and your data fits 
+// naturally into the document model.
+
+// But here's the important part:
+
+// MongoDB isn't simply "better than SQL."
+
+// SQL databases are often better when you have:
+
+// lots of relationships between data
+// complex joins
+// strict data consistency
+// financial transactions
+// highly structured data
+
+// For example, banking systems often benefit heavily from relational databases.
+
+// A simple way to remember it:
+
+// SQL:
+
+// "My data has a strong, structured relationship."
+
+// MongoDB:
+
+// "My data is more flexible and document-oriented."
+
+// For your MERN/Next.js learning, MongoDB is definitely worth learning, but you should also understand SQL because 
+// real-world software engineering uses both. 😄
+
+
+
+// Kaneki, think of scaling like handling more users on your website 🚀
+
+// Vertical Scaling = Scale Up ⬆️
+
+// You make one server more powerful.
+
+// Before:
+// Server
+// CPU: 4 cores
+// RAM: 8 GB
+
+// After:
+// Server
+// CPU: 16 cores
+// RAM: 64 GB
+
+// You upgrade the existing machine.
+
+// Example:
+
+//         More powerful
+//             ↓
+// Users → [ SERVER ]
+
+// Advantages:
+
+// Simple to implement
+// No need to manage multiple servers
+// Easier architecture
+
+// Disadvantage:
+
+// There's a hardware limit
+// If that server goes down, your app may go down 😬
+// Powerful servers can become expensive
+// Horizontal Scaling = Scale Out ➡️
+
+// Instead of making one server stronger, you add more servers.
+
+//              ┌── Server 1
+// Users → Load ├── Server 2
+//         Balancer
+//              └── Server 3
+
+// If traffic increases:
+
+// Server 1
+// Server 2
+// Server 3
+// Server 4  ← Just add another server
+
+// Advantages:
+
+// Can handle huge traffic
+// Better reliability
+// No single server has to handle everything
+// Easier to keep adding capacity
+
+// Disadvantages:
+
+// More complex
+// Requires load balancing and coordination between servers
+// Easy analogy 🍕
+
+// Vertical scaling: Hire one worker and give them a faster computer and better equipment.
+
+// Horizontal scaling: Hire more workers.
+
+// MongoDB is known for supporting horizontal scaling through sharding, where data can be distributed across multiple machines.
+
+// So remember:
+
+// Vertical = Bigger machine ⬆️
+// Horizontal = More machines ➡️
+
+
+// The load balancer acts like a traffic manager 🚦, Kaneki.
+
+// Imagine 1,000 users send requests to your website:
+
+//         Users
+//           ↓
+//      [Load Balancer]
+//        ↙    ↓    ↘
+//    Server1 Server2 Server3
+
+// The load balancer decides which server should handle each request.
+
+// For example:
+
+// User 1 → Server 1
+// User 2 → Server 2
+// User 3 → Server 3
+// User 4 → Server 1
+// User 5 → Server 2
+
+// Without a load balancer, maybe everyone accidentally sends requests to one server:
+
+// 1000 Users → Server 1 💀
+//               Server 2 😴
+//               Server 3 😴
+
+// With a load balancer:
+
+// 1000 Users
+//      ↓
+// Load Balancer 🚦
+//  ↙    ↓    ↘
+// 333   333   334 requests
+//  ↓     ↓      ↓
+// S1    S2     S3
+
+// It can also check if a server is down:
+
+//               ❌ Server 1 (down)
+// Users → Load Balancer
+//               ↓
+//          Server 2 ✅
+//          Server 3 ✅
+
+// So it stops sending traffic to the failed server and redirects requests to healthy ones.
+
+// Simple flow:
+
+// Browser
+//    ↓
+// Load Balancer
+//    ↓
+// Chooses an available server
+//    ↓
+// Server processes request
+//    ↓
+// Response → User
+
+// So basically: Load Balancer = traffic police for servers 🚦😄
+
+// It distributes requests so no single server gets overloaded.
+
+
+// Where the scaling difference becomes interesting 🚀
+
+// Imagine you have 10 servers.
+
+// With a relational database, you might use read replicas:
+
+//                  ┌── Read Replica 1
+//                  │
+// App → Database ───┼── Read Replica 2
+//                  │
+//                  └── Read Replica 3
+
+// Writes generally go to the primary, while reads can be distributed to replicas.
+
+// MongoDB can also use replica sets:
+
+//              Primary
+//              /     \
+//             ↓       ↓
+//         Secondary Secondary
+
+// Writes normally go to the primary, while secondaries replicate the data.
+
+// And when the dataset itself becomes too large, MongoDB can shard:
+
+//                  MongoDB
+//                     ↓
+//           ┌─────────┼─────────┐
+//           ↓         ↓         ↓
+//        Shard 1   Shard 2   Shard 3
+//        data A    data B    data C\
+
+
+
+
+
+// Sure, Kaneki 😄 CAP theorem is one of those DBMS concepts that sounds scary but is actually pretty simple once you visualize it.
+
+// CAP theorem is about distributed systems — systems where your data is spread across multiple servers.
+
+// Imagine:
+
+//         Application
+//              ↓
+//        ┌─────┴─────┐
+//        ↓           ↓
+//     Server A     Server B
+
+// The three letters mean:
+
+// C — Consistency
+// A — Availability
+// P — Partition Tolerance
+
+// C — Consistency
+
+// Every user should see the same/latest data.
+
+// Suppose you change:
+
+// Balance = ₹1000
+
+// After updating it to:
+
+// Balance = ₹500
+
+// you don't want another server to still tell the user:
+
+// Balance = ₹1000
+
+// Consistency means the system gives you the correct, consistent view of the data.
+
+// A — Availability
+
+// Every request should receive a response.
+
+// Even if something goes wrong with part of the system:
+
+// Server A ❌
+// Server B ✅
+
+// the system should still respond using the available server.
+
+// So:
+
+// Availability = "Don't leave the user hanging."
+
+// P — Partition Tolerance
+
+// This is the most confusing one.
+
+// Imagine your servers communicate through a network:
+
+// Server A ←──── Network ────→ Server B
+
+// Suddenly the network connection breaks:
+
+// Server A  ❌❌❌  Server B
+
+// This is a network partition.
+
+// Partition tolerance means your system continues operating despite that communication failure.
+
+// The important part 🚨
+
+// CAP theorem says:
+
+// When a network partition happens, a distributed system has to choose between Consistency and Availability.
+
+// So you get:
+
+//              CAP
+//             /   \
+//            C     A
+//             \   /
+//               P
+
+// During a partition:
+
+// P + C  → Consistent but may reject/delay some requests
+
+// P + A  → Available but may temporarily return different data
+
+// You can't guarantee C + A + P simultaneously during a network partition.
+
+// Example
+
+// Imagine:
+
+// Bank server A       Bank server B
+//      ₹1000              ₹1000
+
+// The network breaks:
+
+// Bank A  ❌❌❌  Bank B
+
+// A customer withdraws ₹800 through Server A.
+
+// Server A now knows:
+
+// ₹200
+
+// But Server B still thinks:
+
+// ₹1000
+
+// If Server B continues accepting withdrawals, you could get inconsistent balances.
+
+// So the system could choose:
+
+// Consistency:
+// "Sorry, we can't process this request right now."
+
+// OR
+
+// Availability:
+// "Process the request even though we can't currently confirm what the other server knows."
+
+// That's the CAP trade-off.
+
+// One-line memory trick 🧠
+
+// C = Same data
+// A = Always respond
+// P = Survive network failure
+
+// And the key exam/interview sentence:
+
+// CAP theorem says that in the presence of a network partition, a distributed system cannot guarantee both consistency
+//  and availability at the same time.
