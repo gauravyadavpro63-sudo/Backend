@@ -3827,4 +3827,147 @@ JSON and JavaScript objects look similar, but they are not the same.
 // And the key exam/interview sentence:
 
 // CAP theorem says that in the presence of a network partition, a distributed system cannot guarantee both consistency
-//  and availability at the same time.
+// //  and availability at the same time.
+
+
+// Because computers naturally work with offsets, kaneki 👀
+
+// Imagine an array:
+
+// int arr[5] = {10, 20, 30, 40, 50};
+
+// The array starts at some memory address, say:
+
+// arr starts at address 1000
+
+// Each int takes 4 bytes:
+
+// arr[0] → address 1000
+// arr[1] → address 1004
+// arr[2] → address 1008
+
+// The important idea is:
+
+// address of arr[i] = starting_address + i × size_of_element
+
+// So for arr[0]:
+
+// 1000 + 0 × 4 = 1000
+
+// For arr[1]:
+
+// 1000 + 1 × 4 = 1004
+
+// That's why 0-based indexing is natural: the index represents the offset from the starting position.
+
+// If arrays were 1-based, the computer would conceptually need:
+
+// address = starting_address + (index - 1) × size
+
+// So you'd always have that extra -1.
+
+// Basically:
+
+// Index 0 means "move 0 positions from the beginning."
+
+// That's why languages like C, C++, Java, and JavaScript use 0-based indexing. Some languages, though,
+//  chose 1-based indexing because it can feel more natural to humans.]
+
+
+
+// we dont use linear search in database because of many reasons we use B+ Tree 
+
+
+
+// why  b+ tree is used  for searching in database
+
+// Kaneki, databases use a B+ Tree mainly because it makes searching, inserting, deleting, and especially disk access very efficient.
+
+// The biggest reason is this:
+
+// Databases usually cannot keep all data in RAM. Data lives on SSD/HDD in chunks called pages/blocks. Reading from disk is much more expensive than comparing a few numbers.
+
+// Imagine this sorted data:
+
+// 1 2 3 4 5 6 7 8 9 10 ... millions of values
+
+// A normal binary search tree might look like:
+
+//         50
+//        /  \
+//      25    75
+//     / \    / \
+
+// Each node has only about 2 children. So for millions of records, the tree can become relatively tall.
+
+// A B+ Tree node can contain many keys and children:
+
+//              [20 | 40 | 60 | 80]
+//            /    |    |    |    \
+//        ...     ...  ...  ...    ...
+
+// Suppose one database page can store:
+
+// [10 | 20 | 30 | 40 | 50 | 60 | 70 | ...]
+
+// and pointers to many children.
+
+// So one node might have 100, 500, or even more children, depending on page size and key sizes.
+
+// That means the tree height stays tiny.
+
+// For example:
+
+// Level 1:        1 root
+//                    |
+// Level 2:       500 nodes
+//                    |
+// Level 3:    250,000 nodes
+//                    |
+// Level 4: 125,000,000 entries
+
+// So to find a record among potentially hundreds of millions, the database might need only a few page accesses:
+
+// Root page
+//    ↓
+// Internal page
+//    ↓
+// Internal page
+//    ↓
+// Leaf page → Found
+
+// That's why it's awesome for databases.
+
+// leaf node point to memory location in ssd
+
+// 1. Start at Root
+
+//         [50 | 200]
+//              |
+//              ↓
+
+// 2. Follow correct child
+
+//         [100 | 150]
+
+//              ↓
+
+// 3. Reach leaf
+
+//         [101 | pointer]
+//                |
+//                ↓
+
+// 4. Use pointer to locate actual row
+
+//         DATABASE PAGE
+//         ┌─────────────────┐
+//         │ ID: 101         │
+//         │ Name: Kaneki    │
+//         │ Age: 20         │
+//         └─────────────────┘
+
+
+// B tree can not implement range query but b+ tree can because all leaf node are connected to each other
+
+
