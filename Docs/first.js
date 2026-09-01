@@ -213,81 +213,81 @@
 //project
 
 
- const express = require("express");
- const app=express();
+//  const express = require("express");
+//  const app=express();
 
 
- app.use(express.json());
+//  app.use(express.json());
 
-  const foodItems=[
-    {id:1,name:"burger",type:"non-veg",price:3300},
-    {id:2,name:"chicken",type:"non-veg",price:300},
-    {id:3,name:"ice-cream",type:"non-veg",price:2300},
-    {id:4,name:"dosa",type:"non-veg",price:300},
-    {id:5,name:"cococola",type:"non-veg",price:3300},
-    {id:6,name:"paties",type:"non-veg",price:300},
-    {id:7,name:"paneer",type:"non-veg",price:3020},
-    {id:8,name:"water",type:"non-veg",price:3030},
-    {id:9,name:"daal chawal",type:"non-veg",price:3300},
-    {id:10,name:"raita",type:"non-veg",price:3400},
-  ]
+//   const foodItems=[
+//     {id:1,name:"burger",type:"non-veg",price:3300},
+//     {id:2,name:"chicken",type:"non-veg",price:300},
+//     {id:3,name:"ice-cream",type:"non-veg",price:2300},
+//     {id:4,name:"dosa",type:"non-veg",price:300},
+//     {id:5,name:"cococola",type:"non-veg",price:3300},
+//     {id:6,name:"paties",type:"non-veg",price:300},
+//     {id:7,name:"paneer",type:"non-veg",price:3020},
+//     {id:8,name:"water",type:"non-veg",price:3030},
+//     {id:9,name:"daal chawal",type:"non-veg",price:3300},
+//     {id:10,name:"raita",type:"non-veg",price:3400},
+//   ]
 
-  const cartItems=[];
-  app.get("/food",(req,res)=>{
-    res.status(200).send(foodItems);
-  })
+//   const cartItems=[];
+//   app.get("/food",(req,res)=>{
+//     res.status(200).send(foodItems);
+//   })
 
-  app.post("/admin",(req,res)=>{
-    //add items in fooditems
-    //authentication karna padega ki ye admin hai ya nhi
-    //dummy code
-    const token="sdfdsf";
-    const Access=token==="sdfdsf"?1:0;
-    if(Access){
-        foodItems.push(req.body);
+//   app.post("/admin",(req,res)=>{
+//     //add items in fooditems
+//     //authentication karna padega ki ye admin hai ya nhi
+//     //dummy code
+//     const token="sdfdsf";
+//     const Access=token==="sdfdsf"?1:0;
+//     if(Access){
+//         foodItems.push(req.body);
        
-        res.status(201).send("items added successfully");
-    }
-    else{
-        res.status(401).send("items cant be added");
-    }
-  })
+//         res.status(201).send("items added successfully");
+//     }
+//     else{
+//         res.status(401).send("items cant be added");
+//     }
+//   })
 
-  app.delete("/food/:id",(req,res)=>{
-    const id=Number(req.params.id);
-    const index=foodItems.findIndex(items=>items.id===id);
-     if(index===-1){
-        res.status(404).send("not found");
-     }
-     else{
-        foodItems.splice(index,1);
-        console.log(foodItems);
-        res.status(200).send("deleted succesfully");
-     }
-  })
-
-
-app.patch("/admin",(req,res)=>{
-  const food=foodItems.find(items=>items.id===req.body.id);
-  food.price=req.body.price;
-  res.send("patch succesfull");
-})
+//   app.delete("/food/:id",(req,res)=>{
+//     const id=Number(req.params.id);
+//     const index=foodItems.findIndex(items=>items.id===id);
+//      if(index===-1){
+//         res.status(404).send("not found");
+//      }
+//      else{
+//         foodItems.splice(index,1);
+//         console.log(foodItems);
+//         res.status(200).send("deleted succesfully");
+//      }
+//   })
 
 
-app.post("/user/:id",(req,res)=>{
-  const id=Number(req.params.id);
-  const item=foodItems.find(items=>items.id===id);
-  if(item){
-   cartItems.push(item);
-   res.send("added to cart")
-  }
-  else{
-    res.status(404).send("not added")
-  }
-})
-app.get("/cart",(req,res)=>{
-  res.send(cartItems);
-})
+// app.patch("/admin",(req,res)=>{
+//   const food=foodItems.find(items=>items.id===req.body.id);
+//   food.price=req.body.price;
+//   res.send("patch succesfull");
+// })
+
+
+// app.post("/user/:id",(req,res)=>{
+//   const id=Number(req.params.id);
+//   const item=foodItems.find(items=>items.id===id);
+//   if(item){
+//    cartItems.push(item);
+//    res.send("added to cart")
+//   }
+//   else{
+//     res.status(404).send("not added")
+//   }
+// })
+// app.get("/cart",(req,res)=>{
+//   res.send(cartItems);
+// })
 
 
 
@@ -298,26 +298,84 @@ app.get("/cart",(req,res)=>{
 
   
 
-app.get("/user",(req,res)=>{
-  try{
-  JSON.perse("dfasd");    //this will throw error so we need to handle that
-  res.send("heelo coders")
-  }
-  catch(err){
-res.send("some error occured")
-  }
-})
+// app.get("/user",(req,res)=>{
+//   try{
+//   JSON.perse("dfasd");    //this will throw error so we need to handle that
+//   res.send("heelo coders")
+//   }
+//   catch(err){
+// res.send("some error occured")
+//   }
+// })
 
 
 
- app.listen(3000,()=>{
-    console.log("listening at port 3000");
- })
+//  app.listen(3000,()=>{
+//     console.log("listening at port 3000");
+//  })
 
 
 
 
   // DATABASE
+
+
+
+
+import express from "express";
+import main from "./database.js"
+import User from "./user.js"
+const app=express();
+
+// CRUD  OPERATION
+
+app.use(express.json());
+app.get("/info",async (req,res)=>{
+ const  ans=await User.find({});
+res.send(ans);
+})
+
+
+app.post("/info", async (req,res)=>{
+  try{
+  await User.create(req.body);
+  res.send("added succesfully");
+  }
+  catch(err){
+    res.send(err);
+  }
+})
+
+app.delete("/info",async (req,res)=>{
+  await User.deleteOne({name:"aditya"})
+  res.send("deleted");
+})
+
+app.patch("/info",async(req,res)=>{
+  const result=await User.updateOne({name:"anshika"},{age:100,city:"pata nhi"});
+  res.send("updated succesfully");
+})
+
+
+
+
+main()
+.then(async()=>{
+  console.log("connected to db")
+  app.listen(3000,()=>{
+    console.log("listening to port 3000");
+  })
+
+
+
+// const result= await User.find({name:"Rohit"});
+// console.log(result);
+})
+.catch((err)=>console.log(err));
+
+
+
+
 
 
   

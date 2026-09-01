@@ -4479,6 +4479,8 @@ JSON and JavaScript objects look similar, but they are not the same.
 //   age: 20,
 //   email: "kaneki@example.com"
 // });
+
+
 // Why use Mongoose?
 
 // MongoDB itself is flexible — documents don't necessarily have to follow one strict structure.
@@ -4505,3 +4507,29 @@ JSON and JavaScript objects look similar, but they are not the same.
 // React → Express/Node → Mongoose → MongoDB
 
 // One important thing: Mongoose isn't MongoDB itself. It's a library that makes working with MongoDB from Node.js more convenient.
+
+
+// A schema is a structured blueprint or definition that describes how something is organized. The exact meaning depends on the context:
+
+// In databases
+
+// A schema defines the structure of a database:
+
+// What tables exist
+// What columns each table has
+// The data type of each column (text, number, date, etc.)
+// Relationships between tables
+// Rules and constraints
+
+// For example:
+
+// Users
+// ------
+// id          INTEGER
+// name        TEXT
+// email       TEXT
+// created_at  DATE
+
+// This is the database schema for a Users table.
+
+
