@@ -1,6 +1,8 @@
 import express from "express"
 import main from "./database2.js"
 import user2 from "./user2.js"
+import ValidateUser from "./validateUser.js";
+import bcrypt from "bcrypt"
 const app=express();
 
 app.use(express.json());
@@ -8,19 +10,48 @@ app.use(express.json());
 app.post("/register",async(req,res)=>{
     try{
         //api level validation
-   const mendatoryField=   ["firstName","emailId"]  
-   const IsAllowed=mendatoryField.every((k)=>Object.keys(req.body).includes(k));
+       ValidateUser(req.body);
 
-   if(!IsAllowed){
-    throw new Error("Fields missing");
+        req.body.passward=await bcrypt.hash(req.body.passward,10);
+      
+     await user2.create(req.body);
+     res.send("user registered successfully")
+  
    }
-        await user2.create(req.body);
-        res.send("user registered successfully")
+    
+    catch(err){
+        res.send(err.message);
+    }
+})
+
+
+//Login
+
+app.post("/login",async(req,res)=>{
+    try{
+     const people=await user2.findById(req.body._id);
+     if(!(req.body.emailId===people.emailId)){
+        throw new Error("invalid credentials");
+     }
+     const IsAllowed=await bcrypt.compare(req.body.passward,people.passward);
+     if(!IsAllowed){
+        throw new Error("invalid credentials");
+     }
+     else{
+        res.send("Login successfully")
+     }
     }
     catch(err){
         res.send(err.message);
     }
 })
+
+
+
+
+
+
+
 
 
 

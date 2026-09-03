@@ -35,6 +35,11 @@ const userSchema=new Schema({
         trim:true,  //prvent space at end and starting
         lowercase:true,
         required:true
+    },
+    passward:{
+        type:String,
+        required:true
+     
     }
 },{timestamps:true})
 
