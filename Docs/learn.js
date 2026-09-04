@@ -5322,3 +5322,220 @@ JSON and JavaScript objects look similar, but they are not the same.
 //             ✓              ❌
 
 // One subtle point: modern digital signatures aren't literally just "encrypting the SHA-256 hash with the private key"; algorithms such as RSA-PSS and ECDSA/EdDSA have their own signing and verification procedures. But the hash → sign → verify mental model is excellent for understanding how the system works. 🔐
+
+
+// A cookie is a small piece of data that a website asks your browser to store. The browser then sends that data back to the website on future requests.
+
+// Think of it like this:
+
+// Without cookie:
+
+// You → Server
+//      "Who am I?"
+
+// Server → "I don't know 😐"
+
+// With cookie:
+
+// You → Server
+//      "Here's my cookie: sessionId=abc123"
+
+// Server → "Ahh, I know this user 👍"
+// 🍪 Real example: Login
+
+// Suppose you log into a website:
+
+// POST /login
+// email = kaneki@gmail.com
+// password = ********
+
+// The server verifies your password.
+
+// Then the server might respond with:
+
+// Set-Cookie: sessionId=abc123
+
+// Your browser stores:
+
+// sessionId = abc123
+
+// Now when you visit another page:
+
+// GET /dashboard
+// Cookie: sessionId=abc123
+
+// The server sees abc123 and can identify your logged-in session.
+
+// So you don't have to send your password with every request.
+
+// Cookie vs localStorage
+
+// Both can store data in the browser, but they're commonly used differently:
+
+// Cookie
+//    ↓
+// Browser automatically sends it
+//    ↓
+// Server
+
+// Whereas:
+
+// localStorage
+//    ↓
+// JavaScript has to read it
+//    ↓
+// Your code sends it if needed
+
+// That's why cookies are very commonly used for authentication/session management.
+
+// One important thing: a cookie usually doesn't contain your password. It might contain a session ID or authentication token that the server uses to recognize you.
+
+// If you're learning backend right now, the next really important thing is understanding how cookies + JWT + sessions work together. That's where cookies start making way more sense. 🍪➡️🔐
+
+
+// Yep, Kaneki 😄 — JWT = JSON Web Token.
+
+// Think of JWT as a digital pass that a server gives you after you successfully log in.
+
+// The basic flow
+
+// You log in:
+
+// You
+//  ↓
+// POST /login
+// email + password
+//  ↓
+// Server
+//  ↓
+// Password correct ✅
+//  ↓
+// Server creates JWT
+//  ↓
+// JWT → You
+
+// The JWT might look like this:
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+// eyJ1c2VySWQiOiIxMjM0In0.
+// abcXYZ123...
+
+// It has 3 parts:
+
+// HEADER.PAYLOAD.SIGNATURE
+// 1. Header
+
+// Tells us things like the algorithm:
+
+// {
+//   "alg": "HS256",
+//   "typ": "JWT"
+// }
+// 2. Payload
+
+// Contains information about the user/session:
+
+// {
+//   "userId": "1234",
+//   "role": "user"
+// }
+
+// ⚠️ The payload is not encrypted by default. Anyone who gets the token can decode the payload, so don't put passwords or other secrets inside it.
+
+// 3. Signature
+
+// This is the important security part.
+
+// The server uses a secret key:
+
+// secretKey = "my-super-secret-key"
+
+// and creates a signature from the header + payload.
+
+// Conceptually:
+
+// Signature =
+// HMAC(
+//    Header + "." + Payload,
+//    secretKey
+// )
+
+// So the final JWT is:
+
+// HEADER.PAYLOAD.SIGNATURE
+// Then you make another request
+
+// For example:
+
+// GET /profile
+// Authorization: Bearer <JWT>
+
+// The server receives the JWT and verifies its signature.
+
+// JWT
+//  ↓
+// Server verifies signature
+//  ↓
+// Valid? ✅
+//  ↓
+// Find user from userId
+//  ↓
+// Return profile
+
+// If someone changes:
+
+// {
+//   "userId": "1234"
+// }
+
+// to:
+
+// {
+//   "userId": "9999"
+// }
+
+// the payload no longer matches the original signature.
+
+// The server calculates/checks the signature again:
+
+// Token signature ❌
+// Calculated signature ❌
+
+// → Token invalid
+
+// That's the cool part. 🔐
+
+// JWT + Cookie
+
+// This connects directly to your previous question about cookies.
+
+// A common setup is:
+
+// LOGIN
+//   ↓
+// Server creates JWT
+//   ↓
+// JWT stored in HttpOnly Cookie
+//   ↓
+// Browser automatically sends cookie
+//   ↓
+// Server verifies JWT
+//   ↓
+// User authenticated ✅
+
+// So remember the distinction:
+
+// JWT = the token/credential
+
+// Cookie = one possible place to store and transport that token
+
+// They're not the same thing.
+
+// A cookie can contain a JWT:
+
+// Cookie:
+// accessToken = eyJhbGciOi...
+
+// And then the browser automatically sends it to the server on matching requests. 🍪🔑
+
+

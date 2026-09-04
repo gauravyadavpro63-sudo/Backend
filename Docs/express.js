@@ -2,9 +2,14 @@ import express from "express"
 import main from "./database2.js"
 import user2 from "./user2.js"
 import ValidateUser from "./validateUser.js";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
+import cookieParser from "cookie-parser"
+import jwt from "jsonwebtoken"
+
+
 const app=express();
 
+app.use(cookieParser());
 app.use(express.json());
 
 app.post("/register",async(req,res)=>{
@@ -36,10 +41,20 @@ app.post("/login",async(req,res)=>{
      const IsAllowed=await bcrypt.compare(req.body.passward,people.passward);
      if(!IsAllowed){
         throw new Error("invalid credentials");
+
      }
      else{
+
+
+        // jwt  tokken
+
+        const token =jwt.sign({id:people._id,emailId:people.emailId},"Rohit@134125",{expiresIn:100});
+         res.cookie("token",token);
         res.send("Login successfully")
+
+          
      }
+
     }
     catch(err){
         res.send(err.message);
@@ -58,20 +73,27 @@ app.post("/login",async(req,res)=>{
 app.get("/info",async(req,res)=>{
     try{
         const result=await user2.find();
+      
+        //validate the user first
+
+        const payload=jwt.verify(req.cookies.token,"Rohit@134125");
+        console.log(payload);
         res.send(result);
     }
     catch(err){
-        res.send(err);
+        res.send(err.message);
     }
 })
 
-app.get("/user/:id",async(req,res)=>{
+app.get("/user",async(req,res)=>{
     try{
-        const result=await user2.findById(req.params.id);
+        // const result=await user2.findById(req.params.id);
+        const payload=jwt.verify(req.cookies.token,"Rohit@134125");
+       const result=await user2.findById(payload.id);
         res.send(result);
     }
     catch(err){
-         res.send(err);
+         res.send(err.message);
     }
 })
 
@@ -94,6 +116,7 @@ app.patch("/user",async(req,res,)=>{
         res.send("update successfull");
     }
     catch(err){
+       
         res.send(err.message);
     }
 })
