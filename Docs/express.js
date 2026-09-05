@@ -5,6 +5,7 @@ import ValidateUser from "./validateUser.js";
 import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser"
 import jwt from "jsonwebtoken"
+import userAuth from "./userAuth.js";
 
 
 const app=express();
@@ -85,12 +86,28 @@ app.get("/info",async(req,res)=>{
     }
 })
 
-app.get("/user",async(req,res)=>{
+app.get("/user",userAuth,async(req,res)=>{
     try{
         // const result=await user2.findById(req.params.id);
-        const payload=jwt.verify(req.cookies.token,"Rohit@134125");
-       const result=await user2.findById(payload.id);
-        res.send(result);
+
+        // varify user first for every crud operation then do any action  so we can make middleware for this 
+
+    //     const {token}=req.cookies;
+    //     if(!token){
+    //         throw new Error("invalid token");
+    //     }
+    //     const payload=jwt.verify(token,"Rohit@134125");
+    //     const {id}=payload;
+    //     if(!id){
+    //         throw new Error("Id is missing");
+    //     }
+    //    const result=await user2.findById(id);
+
+    //     res.send(result);
+
+      res.send(req.result);
+
+
     }
     catch(err){
          res.send(err.message);

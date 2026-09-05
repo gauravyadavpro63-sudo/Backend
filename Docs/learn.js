@@ -5539,3 +5539,129 @@ JSON and JavaScript objects look similar, but they are not the same.
 // And then the browser automatically sends it to the server on matching requests. 🍪🔑
 
 
+
+// Kaneki, a refresh token is mainly used to get a new access token without making the user log in again.
+
+// Think of authentication like this:
+
+// Login
+//   ↓
+// Server verifies email + password
+//   ↓
+// Server gives:
+//    ├── Access Token  → short life (e.g. 15 min)
+//    └── Refresh Token → longer life (e.g. 7 days)
+// Why do we need two tokens?
+
+// If you only have one JWT that lasts 7 days:
+
+// JWT ─────────────── 7 days
+
+// If someone steals it, they can potentially use it for a long time 😬.
+
+// Instead:
+
+// Access Token  → 15 minutes → used for API requests
+// Refresh Token → 7 days     → only used to get a new access token
+// How the flow works
+// 1. User logs in
+// const accessToken = jwt.sign(
+//   { id: user._id },
+//   "access-secret",
+//   { expiresIn: "15m" }
+// );
+
+// const refreshToken = jwt.sign(
+//   { id: user._id },
+//   "refresh-secret",
+//   { expiresIn: "7d" }
+// );
+
+// Server sends both tokens, commonly using cookies.
+
+// 2. User makes API requests
+// User → GET /profile
+//         |
+//         ↓
+// Access Token
+//         |
+//         ↓
+// Server verifies token
+//         |
+//         ↓
+// Returns profile
+
+// Example:
+
+// jwt.verify(accessToken, "access-secret");
+// 3. Access token expires
+
+// After 15 minutes:
+
+// Access Token ❌ Expired
+
+// Instead of asking the user to log in again:
+
+// User
+//  ↓
+// POST /refresh
+//  ↓
+// Sends Refresh Token
+//  ↓
+// Server verifies Refresh Token
+//  ↓
+// Creates new Access Token
+//  ↓
+// User continues normally
+
+// Example:
+
+// app.post("/refresh", (req, res) => {
+//   const refreshToken = req.cookies.refreshToken;
+
+//   try {
+//     const decoded = jwt.verify(
+//       refreshToken,
+//       "refresh-secret"
+//     );
+
+//     const newAccessToken = jwt.sign(
+//       { id: decoded.id },
+//       "access-secret",
+//       { expiresIn: "15m" }
+//     );
+
+//     res.cookie("accessToken", newAccessToken, {
+//       httpOnly: true
+//     });
+
+//     res.send("New access token generated");
+
+//   } catch (err) {
+//     res.status(401).send("Please login again");
+//   }
+// });
+
+// The important idea is:
+
+// Access Token expired?
+//         ↓
+// Do you still have a valid Refresh Token?
+//         ↓
+// YES → Generate new Access Token
+// NO  → User logs in again
+// Simple analogy 🎟️
+
+// Imagine a college library:
+
+// Access token = temporary entry pass valid for 15 minutes.
+// Refresh token = your longer-valid membership card that lets you get another entry pass.
+
+// You don't use the membership card every time. You use the short-term pass for normal access.
+
+// One important thing, Kaneki: in a real backend, refresh tokens are usually handled more carefully than just creating a JWT and forgetting about it. You'll eventually learn concepts like refresh token rotation, storing/revoking refresh tokens, and using HttpOnly + Secure cookies.
+
+
+// passward change--->refresh token invalidate (it need to call db for this action because resresh token info is also strored in db in hashed form)
+
+// passward change--->access token still validate
