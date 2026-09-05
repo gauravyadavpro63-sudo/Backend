@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken"
 import { Schema } from "mongoose";
 
 const userSchema=new Schema({
@@ -42,6 +43,21 @@ const userSchema=new Schema({
      
     }
 },{timestamps:true})
+
+
+// methods in  mongoose
+
+
+userSchema.methods.getJWT=function(){
+   const ans= jwt.sign({id:this._id,emailId:this.emailId},"Rohit@134125",{expiresIn:100});
+   return ans;
+}
+
+
+
+
+
+
 
 const user2=mongoose.model("user2",userSchema);
 export default user2;
